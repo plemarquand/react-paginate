@@ -21,18 +21,20 @@ const PageView = (props) => {
     }
   }
 
+  const linkProps = {
+    onClick: onClick,
+    role: "button",
+    className: linkClassName,
+    href: href,
+    tabIndex: "0",
+    'aria-label': ariaLabel,
+    'aria-current': ariaCurrent,
+    onKeyPress: onClick,
+  };
+
   return (
       <li className={cssClassName}>
-          <a onClick={onClick}
-             role="button"
-             className={linkClassName}
-             href={href}
-             tabIndex="0"
-             aria-label={ariaLabel}
-             aria-current={ariaCurrent}
-             onKeyPress={onClick}>
-            {props.page}
-          </a>
+        {React.cloneElement(props.component || <a/>, linkProps, props.page)}
       </li>
   )
 }

@@ -28,7 +28,8 @@ export default class PaginationBoxView extends Component {
     previousLinkClassName : PropTypes.string,
     nextLinkClassName     : PropTypes.string,
     disabledClassName     : PropTypes.string,
-    breakClassName        : PropTypes.string
+    breakClassName        : PropTypes.string,
+    component             : PropTypes.element
   };
 
   static defaultProps = {
@@ -122,11 +123,13 @@ export default class PaginationBoxView extends Component {
       pageClassName,
       pageLinkClassName,
       activeClassName,
-      extraAriaContext
+      extraAriaContext,
+      component,
     } = this.props;
 
     return <PageView
       key={index}
+      component={component}
       onClick={this.handlePageSelected.bind(null, index)}
       selected={selected === index}
       pageClassName={pageClassName}
@@ -219,38 +222,42 @@ export default class PaginationBoxView extends Component {
       previousLinkClassName,
       previousLabel,
       nextLinkClassName,
-      nextLabel
+      nextLabel,
+      component,
     } = this.props;
 
     const { selected } = this.state;
 
     const previousClasses = previousClassName + (selected === 0 ? ` ${disabledClassName}` : '');
     const nextClasses = nextClassName + (selected === pageCount - 1 ? ` ${disabledClassName}` : '');
+    const prevLinkProps = {
+      onClick: this.handlePreviousPage,
+      className: previousLinkClassName,
+      href: this.hrefBuilder(selected - 1),
+      tabIndex: "0",
+      role: "button",
+      onKeyPress: this.handlePreviousPage,
+    };
+    const nextLinkProps = {
+      onClick: this.handleNextPage,
+      className: nextLinkClassName,
+      href: this.hrefBuilder(selected + 1),
+      tabIndex: "0",
+      role: "button",
+      onKeyPress: this.handleNextPage,
+    };
+
 
     return (
       <ul className={containerClassName}>
         <li className={previousClasses}>
-          <a onClick={this.handlePreviousPage}
-             className={previousLinkClassName}
-             href={this.hrefBuilder(selected - 1)}
-             tabIndex="0"
-             role="button"
-             onKeyPress={this.handlePreviousPage}>
-            {previousLabel}
-          </a>
+          {React.cloneElement(component || <a/>, prevLinkProps, previousLabel)}
         </li>
 
         {this.pagination()}
 
         <li className={nextClasses}>
-          <a onClick={this.handleNextPage}
-             className={nextLinkClassName}
-             href={this.hrefBuilder(selected + 1)}
-             tabIndex="0"
-             role="button"
-             onKeyPress={this.handleNextPage}>
-            {nextLabel}
-          </a>
+          {React.cloneElement(component || <a/>, nextLinkProps, nextLabel)}
         </li>
       </ul>
     );

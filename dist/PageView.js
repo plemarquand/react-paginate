@@ -28,21 +28,21 @@ var PageView = function PageView(props) {
     }
   }
 
+  var linkProps = {
+    onClick: onClick,
+    role: "button",
+    className: linkClassName,
+    href: href,
+    tabIndex: "0",
+    'aria-label': ariaLabel,
+    'aria-current': ariaCurrent,
+    onKeyPress: onClick
+  };
+
   return _react2.default.createElement(
     'li',
     { className: cssClassName },
-    _react2.default.createElement(
-      'a',
-      { onClick: onClick,
-        role: 'button',
-        className: linkClassName,
-        href: href,
-        tabIndex: '0',
-        'aria-label': ariaLabel,
-        'aria-current': ariaCurrent,
-        onKeyPress: onClick },
-      props.page
-    )
+    _react2.default.cloneElement(props.component || _react2.default.createElement('a', null), linkProps, props.page)
   );
 };
 

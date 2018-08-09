@@ -188,11 +188,13 @@ var PaginationBoxView = function (_Component) {
           pageClassName = _props3.pageClassName,
           pageLinkClassName = _props3.pageLinkClassName,
           activeClassName = _props3.activeClassName,
-          extraAriaContext = _props3.extraAriaContext;
+          extraAriaContext = _props3.extraAriaContext,
+          component = _props3.component;
 
 
       return _react2.default.createElement(_PageView2.default, {
         key: index,
+        component: component,
         onClick: this.handlePageSelected.bind(null, index),
         selected: selected === index,
         pageClassName: pageClassName,
@@ -214,12 +216,29 @@ var PaginationBoxView = function (_Component) {
           previousLinkClassName = _props4.previousLinkClassName,
           previousLabel = _props4.previousLabel,
           nextLinkClassName = _props4.nextLinkClassName,
-          nextLabel = _props4.nextLabel;
+          nextLabel = _props4.nextLabel,
+          component = _props4.component;
       var selected = this.state.selected;
 
 
       var previousClasses = previousClassName + (selected === 0 ? ' ' + disabledClassName : '');
       var nextClasses = nextClassName + (selected === pageCount - 1 ? ' ' + disabledClassName : '');
+      var prevLinkProps = {
+        onClick: this.handlePreviousPage,
+        className: previousLinkClassName,
+        href: this.hrefBuilder(selected - 1),
+        tabIndex: "0",
+        role: "button",
+        onKeyPress: this.handlePreviousPage
+      };
+      var nextLinkProps = {
+        onClick: this.handleNextPage,
+        className: nextLinkClassName,
+        href: this.hrefBuilder(selected + 1),
+        tabIndex: "0",
+        role: "button",
+        onKeyPress: this.handleNextPage
+      };
 
       return _react2.default.createElement(
         'ul',
@@ -227,31 +246,13 @@ var PaginationBoxView = function (_Component) {
         _react2.default.createElement(
           'li',
           { className: previousClasses },
-          _react2.default.createElement(
-            'a',
-            { onClick: this.handlePreviousPage,
-              className: previousLinkClassName,
-              href: this.hrefBuilder(selected - 1),
-              tabIndex: '0',
-              role: 'button',
-              onKeyPress: this.handlePreviousPage },
-            previousLabel
-          )
+          _react2.default.cloneElement(component || _react2.default.createElement('a', null), prevLinkProps, previousLabel)
         ),
         this.pagination(),
         _react2.default.createElement(
           'li',
           { className: nextClasses },
-          _react2.default.createElement(
-            'a',
-            { onClick: this.handleNextPage,
-              className: nextLinkClassName,
-              href: this.hrefBuilder(selected + 1),
-              tabIndex: '0',
-              role: 'button',
-              onKeyPress: this.handleNextPage },
-            nextLabel
-          )
+          _react2.default.cloneElement(component || _react2.default.createElement('a', null), nextLinkProps, nextLabel)
         )
       );
     }
@@ -281,7 +282,8 @@ PaginationBoxView.propTypes = {
   previousLinkClassName: _propTypes2.default.string,
   nextLinkClassName: _propTypes2.default.string,
   disabledClassName: _propTypes2.default.string,
-  breakClassName: _propTypes2.default.string
+  breakClassName: _propTypes2.default.string,
+  component: _propTypes2.default.element
 };
 PaginationBoxView.defaultProps = {
   pageCount: 10,
